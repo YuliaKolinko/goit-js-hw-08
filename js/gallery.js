@@ -71,10 +71,10 @@ const imagesArray = images.map(image => {
   link.classList.add("gallery-link");
   link.href = image.original;
   const img = document.createElement("img");
-  img.class = "gallery-image";
+  img.classList.add("gallery-image");
   img.src = image.preview;
   img.alt = image.description;
-  img.dataSource = image.original;
+  img.setAttribute("data-source", image.original);
   img.width = 360;
   img.height = 200;
   li.append(link);
@@ -82,8 +82,18 @@ const imagesArray = images.map(image => {
   return li;
 });
 gallery.append(...imagesArray);
-document.querySelector("a").addEventListener("click", function (event) {
+gallery.addEventListener("click", event => {
+  // відміна загрузки посилання при кліку
   event.preventDefault();
+
+  // Перевірка кліку на тег img
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
+  // Використання бібліотеки
+  const instance = basicLightbox.create(`
+      <img src="${event.target.dataset.source}" width="1112" height="640">
+  `);
+
+  instance.show();
 });
-gallery.addEventListener("click", openModal);
-function openModal(params) {}
